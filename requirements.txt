@@ -1,0 +1,9 @@
+ultralytics>=8.3
+opencv-python>=4.8
+numpy>=1.24
+pandas>=2.0
+pyyaml>=6.0
+streamlit>=1.35
+folium>=0.16
+streamlit-folium>=0.20
+pytest>=8.0

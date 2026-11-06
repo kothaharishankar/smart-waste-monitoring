@@ -1,0 +1,27 @@
+# environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.refact/
+runs/
+
+# models, databases, datasets (too big / not source code)
+*.pt
+*.onnx
+*.db
+*.zip
+data/images/*
+data/labels/*
+data/raw/
+data/videos/*
+!data/videos/.gitkeep
+configs/data.resolved.yaml
+
+# generated outputs
+results/alerts/*
+results/traces/*
+results/demo_alerts/
+!results/alerts/.gitkeep
+!results/traces/.gitkeep
+out.mp4

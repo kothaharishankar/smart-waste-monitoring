@@ -1,0 +1,13 @@
+path: data
+train: images/train
+val: images/val
+names:
+  0: cardboard
+  1: glass
+  2: metal
+  3: organic
+  4: other
+  5: paper
+  6: plastic
+  7: bin
+test: images/test

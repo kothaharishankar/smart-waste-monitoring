@@ -1,0 +1,47 @@
+# Maps class names found in downloaded datasets onto YOUR unified material classes.
+# scripts/prepare_dataset.py reads this. Run it with --dry-run first and CHECK the
+# printed table - a wrong mapping silently poisons your labels.
+
+target_classes: [cardboard, glass, metal, organic, other, paper, plastic, bin]
+
+# Exact names (case-insensitive) win first.
+explicit:
+  biodegradable: organic
+  bio-degradable: organic
+  organic: organic
+  food: organic
+  trash: other
+  waste: other
+  garbage: other
+  rubbish: other
+  dustbin: bin
+  trashcan: bin
+  "trash can": bin
+  "garbage can": bin
+  "garbage bin": bin
+  "waste bin": bin
+  "trash bin": bin
+  "garbage container": bin
+  "waste container": bin
+  container: bin
+  "paper bag": paper
+  "broken trash can": bin
+  "healthy trash can": bin
+  "trash can closed": bin
+  "trash can open": bin
+  bin: bin
+
+# Source classes to discard entirely (their boxes are removed).
+# "trash over flow" is a region label from one dataset; our overflow rule is geometric.
+drop: [all, background, person, "trash over flow"]
+
+# Fallback: if a class name CONTAINS one of these words (split on spaces, _ and -),
+# it is mapped to that material. First matching material below wins.
+keywords:
+  bin: [bin, bins, dustbin, wheelie]
+  plastic: [plastic, polythene, wrapper, bag, foam, styrofoam, straw, pet, bottle_cap]
+  glass: [glass, jar]
+  metal: [metal, can, aluminium, aluminum, tin, steel]
+  cardboard: [cardboard, carton, box]
+  paper: [paper, newspaper, magazine, tissue]
+  organic: [organic, biodegradable, food, fruit, vegetable, peel]

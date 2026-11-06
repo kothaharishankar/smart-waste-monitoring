@@ -1,0 +1,57 @@
+# All tunable settings live here, so nothing is hard-coded in the source.
+
+model:
+  weights: models/best.pt     # produced by scripts/train.py (or downloaded from Colab)
+  conf: 0.20                  # detector confidence threshold
+  imgsz: 640
+  device: null                # null = auto (GPU if available); or "cpu" / "0"
+
+classes:
+  # Material classes your model detects. Must match the names in configs/data.yaml
+  # (scripts/prepare_dataset.py writes that file for you).
+  waste_classes: [cardboard, glass, metal, organic, other, paper, plastic]
+  # Bin containers. Waste INSIDE a bin is normal; waste just OUTSIDE it means the bin overflows.
+  bin_classes: [bin]
+  # Optional extra classes that mean "problem" on their own. Only used if you
+  # trained a model with these classes; otherwise leave as is.
+  direct_flag_classes: [bin_overflowing, garbage_dump]
+
+pipeline:
+  sample_fps: 1.0             # analyse 1 frame per second, not every frame
+  flag_conf: 0.30             # only detections above this confidence are counted
+  # "Garbage accumulation": a frame is flagged when enough waste is visible.
+  # Calibrate per camera: look at a few frames of a clean spot and a dirty spot,
+  # then set values that separate them.
+  # --- illegal dump: loose waste that is NOT near any bin ---
+  min_items: 3                # flag if at least this many loose waste items are visible ...
+  min_area: 0.02              # ... or loose waste covers at least this share of the frame
+  # --- overflowing bin: waste just outside a detected bin ---
+  bin_pad: 0.35               # zone around a bin box, as a fraction of its width/height
+  min_overflow_items: 2       # waste items in that zone needed to call the bin overflowing
+
+events:
+  window: 20                  # samples in the sliding window (20 s at 1 fps)
+  on_ratio: 0.7               # >=70% flagged in window  -> confirmed
+  off_ratio: 0.2              # <=20% flagged in window  -> cleared
+  suspect_ratio: 0.3          # >=30% flagged            -> "suspected"
+  severity_medium: 0.05       # severity score thresholds
+  severity_high: 0.15
+
+paths:
+  db: data/waste.db
+  alerts_dir: results/alerts
+  traces_dir: results/traces
+
+# One entry per camera / fixed spot. Edit the coordinates for your real locations.
+# Optional roi: [x1, y1, x2, y2] as fractions of the frame (0-1). Only waste whose
+# centre is inside this rectangle is counted (e.g. the area around the bin).
+cameras:
+  - id: cam_01
+    name: "Camera 1 - main road bin"
+    lat: 20.5937
+    lon: 78.9629
+    # roi: [0.1, 0.3, 0.9, 1.0]
+  - id: cam_02
+    name: "Camera 2 - market corner"
+    lat: 20.6010
+    lon: 78.9700
